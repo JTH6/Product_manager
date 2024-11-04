@@ -10,6 +10,7 @@
   --secondary-color: #4A4A4A;
   --link-color: #1f1c2e;
   --link-color-hover: #c3cff4;
+  --link-color-hover-icon: #1f1f25;
   --link-color-active: #fff;
   --link-color-active-bg: #1f1c2e;
   --projects-section: #fff;
@@ -32,6 +33,7 @@
   --projects-section: #1f2937;
   --link-color: rgba(255,255,255,.8);
   --link-color-hover: rgba(195, 207, 244, 0.1);
+  --link-color-hover-icon: #fff;
   --link-color-active-bg: rgba(195, 207, 244, 0.2);
   --button-bg: #1f2937;
   --search-area-bg: #1f2937;
@@ -57,24 +59,18 @@ body {
   display: flex;
   justify-content: center;
   background-color: var(--app-container);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  transition: 0.2s;
+  max-width: 1800px;
 }
 
 button, a {
   cursor: pointer;
 }
 
-.app-container {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  background-color: var(--app-container);
-  transition: 0.2s;
-  max-width: 1800px;
-}
-.app-container button, .app-container input, .app-container optgroup, .app-container select, .app-container textarea {
-  font-family: "DM Sans", sans-serif;
-}
 .app-content {
   display: flex;
   height: 100%;
@@ -95,10 +91,13 @@ button, a {
 }
 .app-header-left {
   flex-grow: 1;
+  text-align: center;
 }
+
 .app-header-right button {
   margin-left: 10px;
 }
+
 .app-icon {
   width: 26px;
   height: 2px;
@@ -129,19 +128,20 @@ button, a {
   line-height: 24px;
   font-weight: 700;
   margin: 0 32px;
+  cursor: default;
 }
 
 .mode-switch {
   background-color: transparent;
   border: none;
-  padding: 0;
   color: var(--main-color);
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  margin-right: 10px;
+  font-size: 22px;
+  padding: 0;
+  border-radius: 50%;
 }
 
-.search-wrapper {
+.search {
   border-radius: 20px;
   background-color: var(--search-area-bg);
   padding-right: 12px;
@@ -155,8 +155,10 @@ button, a {
   box-shadow: 0 2px 6px 0 rgba(136, 148, 171, 0.2), 0 24px 20px -24px rgba(71, 82, 107, 0.1);
   overflow: hidden;
 }
-.dark .search-wrapper {
+
+.dark .search {
   box-shadow: none;
+  color: #fff;
 }
 
 .search-input {
@@ -169,33 +171,54 @@ button, a {
   background-color: var(--search-area-bg);
   color: var(--main-color);
 }
-.search-input:placeholder {
-  color: var(--main-color);
-  opacity: 0.6;
+
+.search-input::placeholder {
+  color: #1b1b27;
+  opacity: 0.8;
+}
+
+.dark .search-input::placeholder {
+  color: #fff;
+  opacity: 0.8;
+}
+
+.search i {
+  margin-right: 10px;
+  color: rgba(27, 27, 39);
+  cursor: pointer;
+}
+
+.dark .search i {
+  color: #fff;
 }
 
 .add-btn {
-  color: #fff;
-  background-color: var(--button-bg);
-  padding: 0;
+  color: #1b1b27;
   border: 0;
   border-radius: 50%;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  background: transparent;
+  padding: 0;
+  margin-right: 10px;
+}
+
+.add-btn i {
+  font-size: 22px;
+}
+
+.dark .add-btn {
+  color: #fff;
 }
 
 .notification-btn {
-  color: var(--main-color);
   padding: 0;
-  border: 0;
-  background-color: transparent;
-  height: 32px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  border: none;
+  font-size: 20px;
+  background: transparent;
+  margin: 0 10px;
+}
+
+.dark .notification-btn {
+  color: #fff;
 }
 
 .profile-btn {
@@ -221,37 +244,45 @@ button, a {
   font-weight: 700;
 }
 
-.page-content  {
-  flex: 1;
-  width: 100%;
-}
+/*  Zona Side Bar */
 
 .app-sidebar {
   padding: 40px 16px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: center;
+  position: static;
+  height: 90vh;
 }
 .app-sidebar-link {
   color: var(--main-color);
   color: var(--link-color);
-  margin: 16px 0;
+  margin: 16px 10px;
   transition: 0.2s;
   border-radius: 50%;
-  flex-shrink: 0;
   width: 40px;
   height: 40px;
   display: flex;
   justify-content: center;
   align-items: center;
 }
+
 .app-sidebar-link:hover {
   background-color: var(--link-color-hover);
-  color: var(--link-color-active);
+  color: var(--link-color-hover-icon);
 }
 .app-sidebar-link.active {
   background-color: var(--link-color-active-bg);
   color: var(--link-color-active);
+}
+
+/* Zona Principal */
+
+.main-content {
+  display: flex;
+  margin-top: 20px;
+  height: 100%;
 }
 
 .projects-section {
@@ -264,20 +295,22 @@ button, a {
   display: flex;
   flex-direction: column;
 }
+
 .projects-section-line {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding-bottom: 32px;
 }
-.projects-section-header {
+
+.projects-section-header, .message-section-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
   color: var(--main-color);
 }
-.projects-section-header p {
+.projects-section-header p, .message-section-header p {
   font-size: 24px;
   line-height: 32px;
   font-weight: 700;
@@ -291,15 +324,18 @@ button, a {
 
 .projects-status {
   display: flex;
+  text-align: center;
 }
 
 .item-status {
   display: flex;
   flex-direction: column;
-  margin-right: 16px;
+  margin-right: 15px;
+  text-align: center;
+  min-width: 80px;
 }
+
 .item-status:not(:last-child) .status-type:after {
-  content: "";
   position: absolute;
   right: 8px;
   top: 50%;
@@ -311,15 +347,14 @@ button, a {
 }
 
 .status-number {
-  font-size: 24px;
-  line-height: 32px;
+  font-size: 18px;
   font-weight: 700;
   color: var(--main-color);
 }
 
 .status-type {
   position: relative;
-  padding-right: 24px;
+  margin-top: 5px;
   color: var(--secondary-color);
 }
 
@@ -342,14 +377,27 @@ button, a {
   margin-left: 8px;
   transition: 0.2s;
 }
+
 .view-btn.active {
   background-color: var(--link-color-active-bg);
   color: var(--link-color-active);
 }
+
 .view-btn:not(.active):hover {
   background-color: var(--link-color-hover);
-  color: var(--link-color-active);
+  color: var(--link-color-hover-icon);
 }
+
+.view-btn i {
+  font-size: 20px;
+}
+
+.project-box-header span {
+  color: #1f1f25;
+  opacity: 1;
+}
+
+/* Zona mensajes */
 
 .messages-section {
   flex-shrink: 0;
@@ -358,11 +406,14 @@ button, a {
   margin-left: 24px;
   flex: 1;
   width: 100%;
+  margin-right: 20px;
   border-radius: 30px;
   position: relative;
   overflow: auto;
   transition: all 300ms cubic-bezier(0.19, 1, 0.56, 1);
 }
+
+
 .messages-section .messages-close {
   position: absolute;
   top: 12px;
@@ -378,7 +429,8 @@ button, a {
   opacity: 1;
   margin-left: 0;
 }
-.messages-section .projects-section-header {
+.messages-section .projects-section-header, 
+.message-section-header {
   position: sticky;
   top: 0;
   z-index: 1;
@@ -387,7 +439,8 @@ button, a {
 }
 
 .message-box {
-  border-top: 1px solid var(--message-box-border);
+  border-top: 2px solid var(--message-box-border);
+  border-bottom: 2px solid var(--message-box-border);
   padding: 16px;
   display: flex;
   align-items: flex-start;
@@ -536,12 +589,19 @@ button, a {
   margin-bottom: 16px;
   color: var(--main-color);
 }
+
 .project-box-header span {
-  color: #4A4A4A;
-  opacity: 0.7;
+  color: #1b1b27;
+  opacity: 1;
   font-size: 14px;
-  line-height: 16px;
+  font-weight: 500;
+  padding: 5px 15px;
 }
+
+.project-box-header i {
+  font-size: 16px;
+}
+
 .project-box-content-header {
   text-align: center;
   margin-bottom: 16px;
@@ -722,11 +782,19 @@ button, a {
     height: 20px;
   }
   .add-btn svg, .notification-btn svg, .mode-switch svg {
-    width: 16px;
-    height: 16px;
+    font-size: 15px;
+    margin: 5px;
   }
   .app-header-right button {
     margin-left: 4px;
+  }
+
+  .app-icon {
+    margin-right: 15px;
+  }
+
+  .search {
+    width: 70%;
   }
 }
 @media screen and (max-width: 520px) {
@@ -769,6 +837,7 @@ button, a {
     padding: 10px;
   }
   .projects-section-header p,
+  .message-section-header p,
   .projects-section-header .time {
     font-size: 18px;
   }
