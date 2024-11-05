@@ -28,26 +28,16 @@
 
         const socket = io({
             auth:{
-                username: await getUserName(),
                 serverOffset: 0
             }
         })
     
         socket.on('chat message', (msg, serverOffset, user, currentUser) => {
             const itemClass = user == currentUser ? 'sent' : 'received';
-            const item = `<li class="message ${itemClass}">${msg}</li>`;
+            const item = `<li class="message ${itemClass}">${msg} <span class="time">${user}</span></li>`;
             messages.insertAdjacentHTML('beforeend', item);
             socket.auth.serverOffset = serverOffset;
-            messages.scrollTop = messages.scrollHeight;
-        })
-    
-        form.addEventListener('submit', (e) => {
-            e.preventDefault()
-
-            if(input.value) {
-                socket.emit('chat message', input.value)
-                input.value = ''
-            }
+            messages.scrollTop = messages.scrollHeight
         })
     </script>
 
@@ -55,31 +45,199 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
 </head>
 <body>
-    <section class="chat-container">
-        <!-- Encabezado del chat -->
-        <div class="chat-header">
-            <img src="https://via.placeholder.com/40" alt="Avatar">
-            <h3>Contacto <br><span>En línea</span></h3>
-            <button>
-                <i class="fa-solid fa-xmark"></i>
+    <header class="app-header">
+        <div class="app-header-left">
+            <span class="app-icon"></span>
+            <p class="app-name">Instituto de vision</p>
+            <div class="search">
+                <input class="search-input" type="text" placeholder="Buscar">
+                <i class="fa-solid fa-magnifying-glass"></i>
+            </div>
+        </div>
+        <div class="app-header-right">
+            <button class="mode-switch" title="Tema">
+                <i class="fa-solid fa-moon"></i>
+            </button>
+            <button class="add-btn" title="Añadir nuevo proyecto">
+                <i class="fa-solid fa-circle-plus"></i>
+            </button>
+            <button class="notification-btn" title="Notificaciones">
+                <i class="fa-regular fa-bell"></i>
+            </button>
+            <button class="profile-btn">
+                <img src="https://assets.codepen.io/3306515/IMG_2025.jpg"/>
+                <span>Administrador</span>
             </button>
         </div>
+        <!-- <button class="messages-btn show">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-message-circle">
+            <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z" /></svg>
+        </button> -->
+    </header>
+        <main class="main-content"> 
+            <aside class="app-sidebar">
+                <a href="" class="app-sidebar-link active" title="Principal">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-home">
+                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
+                    <polyline points="9 22 9 12 15 12 15 22" />
+                    </svg>
+                </a>
+                <a href="" class="app-sidebar-link chart">
+                    <svg class="link-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="feather feather-pie-chart" viewBox="0 0 24 24">
+                    <defs />
+                    <path d="M21.21 15.89A10 10 0 118 2.83M22 12A10 10 0 0012 2v10z" />
+                    </svg>
+                </a>
+                <a href="" class="app-sidebar-link">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-calendar">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                    <line x1="16" y1="2" x2="16" y2="6" />
+                    <line x1="8" y1="2" x2="8" y2="6" />
+                    <line x1="3" y1="10" x2="21" y2="10" />
+                    </svg>
+                </a>
+                <a href="" class="app-sidebar-link">
+                    <svg class="link-icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" class="feather feather-settings" viewBox="0 0 24 24">
+                    <defs />
+                    <circle cx="12" cy="12" r="3" />
+                    <path d="M19.4 15a1.65 1.65 0 00.33 1.82l.06.06a2 2 0 010 2.83 2 2 0 01-2.83 0l-.06-.06a1.65 1.65 0 00-1.82-.33 1.65 1.65 0 00-1 1.51V21a2 2 0 01-2 2 2 2 0 01-2-2v-.09A1.65 1.65 0 009 19.4a1.65 1.65 0 00-1.82.33l-.06.06a2 2 0 01-2.83 0 2 2 0 010-2.83l.06-.06a1.65 1.65 0 00.33-1.82 1.65 1.65 0 00-1.51-1H3a2 2 0 01-2-2 2 2 0 012-2h.09A1.65 1.65 0 004.6 9a1.65 1.65 0 00-.33-1.82l-.06-.06a2 2 0 010-2.83 2 2 0 012.83 0l.06.06a1.65 1.65 0 001.82.33H9a1.65 1.65 0 001-1.51V3a2 2 0 012-2 2 2 0 012 2v.09a1.65 1.65 0 001 1.51 1.65 1.65 0 001.82-.33l.06-.06a2 2 0 012.83 0 2 2 0 010 2.83l-.06.06a1.65 1.65 0 00-.33 1.82V9a1.65 1.65 0 001.51 1H21a2 2 0 012 2 2 2 0 01-2 2h-.09a1.65 1.65 0 00-1.51 1z" />
+                    </svg>
+                </a>
+            </aside>
+            <section class="projects-section">
+                <div class="projects-section-header">
+                    <p>Proyectos</p>
+                    <p class="time">Noviembre, 5</p>
+                </div>
+                <div class="projects-section-line">
+                    <div class="projects-status">
+                        <div class="item-status">
+                            <span class="status-number">0</span>
+                            <span class="status-type">Por iniciar</span>
+                        </div>
+                        <div class="item-status">
+                            <span class="status-number">1</span>
+                            <span class="status-type">En proceso</span>
+                        </div>
+                        <div class="item-status">
+                            <span class="status-number">0</span>
+                            <span class="status-type">Para entregar</span>
+                        </div>
+                        <div class="item-status">
+                            <span class="status-number">0</span>
+                            <span class="status-type">Total</span>
+                        </div>
+                    </div>
+                    <div class="view-actions">
+                        <button class="view-btn list-view" title="List View">
+                            <i class="fa-solid fa-list-ul"></i>
+                        </button>
+                        <button class="view-btn grid-view active" title="Grid View">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-grid">
+                            <rect x="3" y="3" width="7" height="7" />
+                            <rect x="14" y="3" width="7" height="7" />
+                            <rect x="14" y="14" width="7" height="7" />
+                            <rect x="3" y="14" width="7" height="7" /></svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="project-boxes jsGridView">
+                    <div class="project-box-wrapper">
+                        <div class="project-box" style="background-color: #fee4cb;">
+                            <div class="project-box-header">
+                                <span>Noviembre 1, 2024</span>
+                                <div class="more-wrapper">
+                                    <button class="project-btn-more">
+                                        <i class="fa-solid fa-ellipsis-vertical"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="project-box-content-header">
+                                <p class="box-content-header">Escultura de Poseidon</p>
+                                <p class="box-content-subheader">Maria Antonieta</p>
+                            </div>
+                            <div class="box-progress-wrapper">
+                                <p class="box-progress-header">Progreso</p>
+                                <div class="box-progress-bar">
+                                    <span class="box-progress" style="width: 60%; background-color: #ff942e"></span>
+                                </div>
+                                <p class="box-progress-percentage">60%</p>
+                            </div>
+                            <div class="project-box-footer">
+                                <div class="participants">
+                                    <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=2550&q=80" alt="participant">
+                                    <img src="https://images.unsplash.com/photo-1503023345310-bd7c1de61c7d?ixid=MXwxMjA3fDB8MHxzZWFyY2h8MTB8fG1hbnxlbnwwfHwwfA%3D%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=900&q=60" alt="participant">
+                                    <button class="add-participant" style="color: #ff942e;">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" class="feather feather-plus">
+                                        <path d="M12 5v14M5 12h14" />
+                                    </svg>
+                                    </button>
+                                </div>
+                                <div class="days-left" style="color: #ff942e;">
+                                    <p>Faltan 10 dias</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section id="message-section" class="messages-section">
+                <button class="messages-close">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-x-circle">
+                    <circle cx="12" cy="12" r="10" />
+                    <line x1="15" y1="9" x2="9" y2="15" />
+                    <line x1="9" y1="9" x2="15" y2="15" /></svg>
+                </button>
+                <div class="message-section-header">
+                    <p>Client Messages</p>
+                </div>
+                <div class="messages">
+                    <div class="message-box" id="box-message">
+                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=2550&q=80" alt="profile image">
+                        <div class="message-content">
+                            <div class="message-header">
+                                <div class="name">Paula</div>
+                                <div class="star-checkbox">
+                                    <input type="checkbox" id="star-1">
+                                    <label for="star-1">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-star">
+                                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2" /></svg>
+                                    </label>
+                                </div>
+                            </div>
+                                <p class="message-line">
+                                Muy buena entrega, espero que siguente tambien sea igual de buena o mejor :/
+                                </p>
+                                <p class="message-line time">Oct, 31</p>
+                        </div>
+                    </div>
+            </section>
+            <section class="chat-container hidden" id="chat-section">
+                <!-- Encabezado del chat -->
+                <div class="chat-header">
+                    <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixid=MXwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHw%3D&ixlib=rb-1.2.1&auto=format&fit=crop&w=2550&q=80" alt="profile image">
+                    <h3>Paula <br><span>En línea</span></h3>
+                    <button id="close-chat">
+                        <i class="fa-solid fa-xmark"></i>
+                    </button>
+                </div>
 
-        <!-- Cuerpo del chat -->
-        <div class="chat-body">
-            <ul id="messages">
-                <li class="message sent">Hola</li>
-                <li class="message received">Hola, como vas?</li>
-            </ul>
-        </div>
+                <!-- Cuerpo del chat -->
+                <div class="chat-body">
+                    <ul id="messages">
+                        <li class="message received">                                Muy buena entrega, espero que siguente tambien sea igual de buena o mejor :/</li>
+                    </ul>
+                </div>
 
-        <!-- Pie del chat -->
-        <form class="chat-footer" id="chatInput">
-            <input type="text" placeholder="Escribe un mensaje..." id="input" autocomplete="off">
-            <button id="send">
-                <i class="fa-regular fa-paper-plane"></i>
-            </button>
-        </form>
-    </section>
+                <!-- Pie del chat -->
+                <form class="chat-footer" id="chatInput">
+                    <input type="text" placeholder="Escribe un mensaje..." id="input" autocomplete="off">
+                    <button id="send">
+                        <i class="fa-regular fa-paper-plane"></i>
+                    </button>
+                </form>
+            </section>
+        </main>
+    <script src="./js/script.js"></script>
 </body>
 </html>
