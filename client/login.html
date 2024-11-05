@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Instituto de visión</title>
+  <link rel="stylesheet" href="./css/style.css" type="text/css">
+  <script type="module">
+    import { io } from 'https://cdn.socket.io/4.3.2/socket.io.esm.min.js';
+
+    const socket = io('http://localhost:3000');
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const loginForm = document.getElementById('login-form');
+        
+        loginForm.onsubmit = (e) => {
+            e.preventDefault(); // Evitar el envío del formulario por defecto
+
+            console.log('Intentando enviar credenciales de login...');
+
+            const user = document.getElementById('user').value;
+            const password = document.getElementById('password').value;
+
+            console.log('Username:', user); 
+            console.log('Password:', password)
+
+            if (user && password) {
+                socket.emit('login', { user, password });
+            } else {
+                console.log('Por favor, ingresa tu nombre de usuario y contraseña');
+            }
+        };
+
+        socket.on('loginResponse', (data) => {
+            if (data.success) {
+                console.log('Login exitoso');
+                window.location.href = '/home';
+            } else {
+                console.error(data.message);
+            }
+        });
+    });
+  </script>
+</head>
+<body>
+  <section class="login-left">
+    <form id="login-form" >
+      <div class="form-group">
+        <h1>Usuario</h1>
+        <input type="text" id="user" name="username" placeholder="Escribe tu usuario" required>
+      </div>
+      <div class="form-group">
+        <h1>Contraseña</h1>
+        <input type="password" id="password" name="password" placeholder="Escribe tu contraseña" required>
+      </div>
+        <button class="btn-login" id="btn-login" type="submit">INGRESAR</button>
+      <!-- <div class="forgot-password">
+        <a href="#" onclick="">¿Olvidaste la contraseña?</a>
+      </div>
+      <div class="error-message">
+        Usuario o contraseña incorrectos.
+      </div> -->
+    </form>
+  </section>
+
+  <section class="login-right">
+    <div class="wave"></div>
+    <div class="logo-container">
+      <div class="logo">( · · )</div>
+      <div class="logo-text">Instituto de visión</div>
+    </div>
+  </section>
+  <script src="./js/script.js"></script>
+</body>
+</html>
